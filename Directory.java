@@ -1,13 +1,48 @@
-public class Directory {
-    private String directoryPath;
-    private VirtualFile[] files;
-    private Directory[] subDirectories;
-    private boolean deleted = false;
-    public void printDirectoryStructure(int level) {
-	/*this method prints the directory name and its files
-    then makes recursion to loop on the subDirectories to print their structure too.
+import java.io.Serializable;
+import java.util.ArrayList;
 
-    The level parameter can be used to print spaces before the directory name is printed to show its level in the structure */
+public class Directory implements Serializable {
+    private String directoryPath;
+    private ArrayList<VirtualFile>  files = new ArrayList<VirtualFile>();
+    private ArrayList<Directory>  subDirectories = new ArrayList<Directory>();
+
+    private boolean deleted = false;
+
+    public Directory(String path){
+        directoryPath = path;
+    }
+
+    public void addFile(VirtualFile file){
+        files.add(file);
+    }
+
+    public void addSubDirectory(Directory subDirectory){
+        subDirectories.add(subDirectory);
+    }
+
+    public ArrayList<Directory> getSubDirectories(){
+        return subDirectories;
+    }
+
+    public ArrayList<VirtualFile> getFiles(){
+        return files;
+    }
+
+    public String getDirectoryPath(){
+        return directoryPath;
+    }
+
+    public void printDirectoryStructure(int level) {
+        if(level == 0){
+            System.out.println("<root>");
+        }
+        for (VirtualFile file: files) {
+            System.out.println(file.getFilePath());
+        }
+        for (Directory directory: subDirectories) {
+            System.out.println(directory.getDirectoryPath());
+            directory.printDirectoryStructure(++level);
+        }
     }
 }
 

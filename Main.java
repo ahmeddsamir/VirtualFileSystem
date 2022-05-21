@@ -12,20 +12,19 @@ public class Main {
         String structurePath = "DiskStructure.txt";
         Scanner scanner = new Scanner(System.in);
         File diskStructure = new File(structurePath);
-        SpaceManager spaceManager = new SpaceManager();
 
         System.out.println("Choose Allocation Method:\n1- Contiguous Allocation\n2- Indexed Allocation\n3- Linked Allocation");
         choice = scanner.nextInt();
-        scanner.next();
+        //scanner.next();
         switch (choice){
             case 1:
-                spaceManager.setAllocationMethod(new ContiguousAllocation());
+                FileSystem.getFileSystem().getSpaceManager().setAllocationMethod(new ContiguousAllocation());
                 break;
             case 2:
-                spaceManager.setAllocationMethod(new IndexedAllocation());
+                FileSystem.getFileSystem().getSpaceManager().setAllocationMethod(new IndexedAllocation());
                 break;
             case 3:
-                spaceManager.setAllocationMethod(new LinkedAllocation());
+                FileSystem.getFileSystem().getSpaceManager().setAllocationMethod(new LinkedAllocation());
                 break;
             default:
         }
@@ -34,7 +33,7 @@ public class Main {
         if (diskStructure.createNewFile() || diskStructure.length() == 0) {
             System.out.println("Please insert disk size in kilobytes.");
             diskSize = scanner.nextInt();
-            scanner.next();
+            //scanner.next();
             FileSystem.getFileSystem().setSize(diskSize);
         //If disk structure already exists, initialize file system from it
         } else {

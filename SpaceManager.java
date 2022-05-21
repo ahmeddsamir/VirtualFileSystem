@@ -1,4 +1,6 @@
-public class SpaceManager {
+import java.io.Serializable;
+
+public class SpaceManager implements Serializable {
     private Allocator allocator;
 
     public void setAllocationMethod(Allocator allocator){
