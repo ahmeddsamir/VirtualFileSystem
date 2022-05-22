@@ -8,6 +8,7 @@ public class FileSystem implements Serializable {
     private static FileSystem fileSystem; //singleton
     private boolean[] systemBlocks;
     private int diskSize;
+    private int allocatedSpace;
     private Directory root = new Directory("root");
 
     private FileSystem(){
@@ -39,23 +40,33 @@ public class FileSystem implements Serializable {
     }
 
     public void createFile(String path, int size){
-        try{
-            VirtualFile newFile = new VirtualFile(size, path);
-            searchDirectory(root, path.substring(0, path.lastIndexOf("/"))).addFile(newFile);
-            spaceManager.allocate(newFile);
+        if(searchFile(root, path) == null){
+            try{
+                VirtualFile newFile = new VirtualFile(size, path);
+                searchDirectory(root, path.substring(0, path.lastIndexOf("/"))).addFile(newFile);
+                spaceManager.allocate(newFile);
+            }
+            catch(Exception e){
+                System.out.println("Path <" + path.substring(0, path.lastIndexOf("/")) + "> doesn't exist");
+            }
         }
-        catch(Exception e){
-            System.out.println("Path <" + path.substring(0, path.lastIndexOf("/")) + "> doesn't exist");
+        else{
+            System.out.println("File already exists");
         }
     }
 
     public void createDirectory(String path){
-        Directory newDirectory = new Directory(path);
-        try{
-            searchDirectory(root, path.substring(0, path.lastIndexOf("/"))).addSubDirectory(newDirectory);
+        if(searchDirectory(root, path) == null){
+            Directory newDirectory = new Directory(path);
+            try{
+                searchDirectory(root, path.substring(0, path.lastIndexOf("/"))).addSubDirectory(newDirectory);
+            }
+            catch(Exception e){
+                System.out.println("Path <" + path.substring(0, path.lastIndexOf("/")) + "> doesn't exist");
+            }
         }
-        catch(Exception e){
-            System.out.println("Path <" + path.substring(0, path.lastIndexOf("/")) + "> doesn't exist");
+        else{
+            System.out.println("Folder already exists");
         }
     }
 
@@ -67,7 +78,21 @@ public class FileSystem implements Serializable {
     }
 
     public void deleteFile(String path){
-        spaceManager.deallocate(searchFile(root, path));
+        try{
+            spaceManager.deallocate(searchFile(root, path));
+        }
+        catch(Exception e){
+            System.out.println("Path <" + path + "> doesn't exist");
+        }
+    }
+
+    public void deleteFolder(String path){
+        try{
+            spaceManager.deleteDirectory(searchDirectory(root, path));
+        }
+        catch(Exception e){
+            System.out.println("Path <" + path + "> doesn't exist");
+        }
     }
 
     boolean[] getSystemBlocks(){
@@ -85,6 +110,42 @@ public class FileSystem implements Serializable {
     public void setSize(int size){
         systemBlocks = new boolean[size];
         diskSize = size;
+        allocatedSpace = 0;
+    }
+
+    public int getAllocatedSpace(){
+        return allocatedSpace;
+    }
+
+    public void incrementAllocatedSpace(int value){
+        allocatedSpace += value;
+    }
+
+    public void decrementAllocatedSpace(int value){
+        allocatedSpace -= value;
+    }
+
+    public void displayDiskStatus(){
+        //Empty space
+        System.out.println("Empty Space: " + (diskSize - allocatedSpace));
+        //Allocated space
+        System.out.println("Allocated Space: " + allocatedSpace);
+        //Empty Blocks
+        System.out.println("Empty Blocks:");
+        for(int i = 0; i < diskSize; i++){
+            if(!systemBlocks[i]){
+                System.out.print(i + "  ");
+            }
+        }
+        System.out.println();
+        //Allocated Blocks
+        System.out.println("Allocated Blocks:");
+        for(int i = 0; i < diskSize; i++){
+            if(systemBlocks[i]){
+                System.out.print(i + "  ");
+            }
+        }
+        System.out.println();
     }
 
     public Directory searchDirectory(Directory currentDirectory, String path){
@@ -101,18 +162,6 @@ public class FileSystem implements Serializable {
         }
         return null;
     }
-
-    /*public VirtualFile searchFile(Directory currentDirectory, String path){
-        for (VirtualFile file : currentDirectory.getFiles()) {
-            if(file.getFilePath().equals(path)){
-                return file;
-            }
-        }
-        for (Directory directory : currentDirectory.getSubDirectories()) {
-            searchDirectory(directory, path);
-        }
-        return null;
-    }*/
 
     public VirtualFile searchFile(Directory currentDirectory, String path){
         Queue<Directory> directories = new LinkedList<Directory>();

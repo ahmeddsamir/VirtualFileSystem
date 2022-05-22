@@ -33,17 +33,15 @@ public class ContiguousAllocation implements Allocator{
         }
 
         //After determining the start index, start allocating blocks
-        for(int i = index; i < file.getSize() + index; i++){
-            file.addBlock(i);
-            FileSystem.getFileSystem().setTrue(i);
+        if(index == -1){
+            System.out.println("Not enough space");
         }
-    }
-
-    @Override
-    public void deallocate(VirtualFile file) {
-        file.deleteFile();
-        for (int block : file.getAllocatedBlocks()) {
-            FileSystem.getFileSystem().setFalse(block);
+        else{
+            FileSystem.getFileSystem().incrementAllocatedSpace(file.getSize());
+            for(int i = index; i < file.getSize() + index; i++){
+                file.addBlock(i);
+                FileSystem.getFileSystem().setTrue(i);
+            }
         }
     }
 }

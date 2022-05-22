@@ -3,9 +3,4 @@ public class IndexedAllocation implements Allocator{
     public void allocate(VirtualFile file) {
 
     }
-
-    @Override
-    public void deallocate(VirtualFile file) {
-
-    }
 }

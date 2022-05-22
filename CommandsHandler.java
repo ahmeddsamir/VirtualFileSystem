@@ -14,10 +14,10 @@ public class CommandsHandler implements Serializable {
             FileSystem.getFileSystem().deleteFile(arguments[1]);
         }
         else if (arguments[0].equals("DeleteFolder") && arguments.length == 2){
-
+            FileSystem.getFileSystem().deleteFolder(arguments[1]);
         }
         else if (arguments[0].equals("DisplayDiskStatus")){
-
+            FileSystem.getFileSystem().displayDiskStatus();
         }
         else if (arguments[0].equals("DisplayDiskStructure")){
             FileSystem.getFileSystem().getRootDirectory().printDirectoryStructure(0);

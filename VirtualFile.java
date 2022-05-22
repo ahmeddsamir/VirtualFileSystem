@@ -22,6 +22,10 @@ public class VirtualFile implements Serializable {
         deleted = true;
     }
 
+    public boolean isDeleted() {
+        return deleted;
+    }
+
     public int getSize(){
         return size;
     }
