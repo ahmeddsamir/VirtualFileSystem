@@ -37,10 +37,10 @@ public class Directory implements Serializable {
             System.out.println("<root>");
         }
         for (VirtualFile file: files) {
-            System.out.println(file.getFilePath());
+            System.out.println(file.getFilePath().substring(file.getFilePath().lastIndexOf("/") + 1));
         }
         for (Directory directory: subDirectories) {
-            System.out.println(directory.getDirectoryPath());
+            System.out.println(directory.getDirectoryPath().substring(directory.getDirectoryPath().lastIndexOf("/") + 1));
             directory.printDirectoryStructure(++level);
         }
     }

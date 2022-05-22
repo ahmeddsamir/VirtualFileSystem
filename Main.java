@@ -15,7 +15,6 @@ public class Main {
 
         System.out.println("Choose Allocation Method:\n1- Contiguous Allocation\n2- Indexed Allocation\n3- Linked Allocation");
         choice = scanner.nextInt();
-        //scanner.next();
         switch (choice){
             case 1:
                 FileSystem.getFileSystem().getSpaceManager().setAllocationMethod(new ContiguousAllocation());
@@ -33,7 +32,6 @@ public class Main {
         if (diskStructure.createNewFile() || diskStructure.length() == 0) {
             System.out.println("Please insert disk size in kilobytes.");
             diskSize = scanner.nextInt();
-            //scanner.next();
             FileSystem.getFileSystem().setSize(diskSize);
         //If disk structure already exists, initialize file system from it
         } else {

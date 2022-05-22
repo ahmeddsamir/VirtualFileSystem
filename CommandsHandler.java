@@ -5,11 +5,10 @@ public class CommandsHandler implements Serializable {
     public static void parseCommand(String command){
         String[] arguments = command.split(" ");
         if(arguments[0].equals("CreateFile") && arguments.length == 3){
-            int index = arguments[1].lastIndexOf("/");
-            FileSystem.getFileSystem().createFile(arguments[1].substring(0, index), Integer.parseInt(arguments[2]), arguments[1]);
+            FileSystem.getFileSystem().createFile(arguments[1], Integer.parseInt(arguments[2]));
         }
         else if (arguments[0].equals("CreateFolder") && arguments.length == 2){
-
+            FileSystem.getFileSystem().createDirectory(arguments[1]);
         }
         else if (arguments[0].equals("DeleteFile") && arguments.length == 2){
             FileSystem.getFileSystem().deleteFile(arguments[1]);

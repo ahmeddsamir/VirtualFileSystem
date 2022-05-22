@@ -1,5 +1,7 @@
 import java.io.*;
 import java.nio.file.Path;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class FileSystem implements Serializable {
     private SpaceManager spaceManager = new SpaceManager();
@@ -36,10 +38,25 @@ public class FileSystem implements Serializable {
         return spaceManager;
     }
 
-    public void createFile(String parentDirectory, int size, String filePath){
-        VirtualFile newFile = new VirtualFile(size, filePath);
-        spaceManager.allocate(newFile);
-        searchDirectory(root, parentDirectory).addFile(newFile);
+    public void createFile(String path, int size){
+        try{
+            VirtualFile newFile = new VirtualFile(size, path);
+            searchDirectory(root, path.substring(0, path.lastIndexOf("/"))).addFile(newFile);
+            spaceManager.allocate(newFile);
+        }
+        catch(Exception e){
+            System.out.println("Path <" + path.substring(0, path.lastIndexOf("/")) + "> doesn't exist");
+        }
+    }
+
+    public void createDirectory(String path){
+        Directory newDirectory = new Directory(path);
+        try{
+            searchDirectory(root, path.substring(0, path.lastIndexOf("/"))).addSubDirectory(newDirectory);
+        }
+        catch(Exception e){
+            System.out.println("Path <" + path.substring(0, path.lastIndexOf("/")) + "> doesn't exist");
+        }
     }
 
     //To Be Deleted
@@ -70,24 +87,46 @@ public class FileSystem implements Serializable {
         diskSize = size;
     }
 
-    public Directory searchDirectory(Directory root, String path){
-        if(root.getDirectoryPath().equals(path)){
-            return root;
-        }
-        for (Directory directory : root.getSubDirectories()) {
-            searchDirectory(directory, path);
+    public Directory searchDirectory(Directory currentDirectory, String path){
+        Queue<Directory> directories = new LinkedList<Directory>();
+        directories.add(currentDirectory);
+        while(!directories.isEmpty()){
+            currentDirectory = directories.poll();
+            if(currentDirectory.getDirectoryPath().equals(path)){
+                return currentDirectory;
+            }
+            for (Directory directory : currentDirectory.getSubDirectories()){
+                directories.add(directory);
+            }
         }
         return null;
     }
 
-    public VirtualFile searchFile(Directory root, String path){
-        for (VirtualFile file : root.getFiles()) {
+    /*public VirtualFile searchFile(Directory currentDirectory, String path){
+        for (VirtualFile file : currentDirectory.getFiles()) {
             if(file.getFilePath().equals(path)){
                 return file;
             }
         }
-        for (Directory directory : root.getSubDirectories()) {
+        for (Directory directory : currentDirectory.getSubDirectories()) {
             searchDirectory(directory, path);
+        }
+        return null;
+    }*/
+
+    public VirtualFile searchFile(Directory currentDirectory, String path){
+        Queue<Directory> directories = new LinkedList<Directory>();
+        directories.add(currentDirectory);
+        while(!directories.isEmpty()){
+            currentDirectory = directories.poll();
+            for (VirtualFile file : currentDirectory.getFiles()){
+                if(file.getFilePath().equals(path)){
+                    return file;
+                }
+            }
+            for (Directory directory : currentDirectory.getSubDirectories()){
+                directories.add(directory);
+            }
         }
         return null;
     }
