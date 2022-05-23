@@ -39,12 +39,18 @@ public class FileSystem implements Serializable {
         return spaceManager;
     }
 
+    public int getFreeSpace(){
+        return diskSize - allocatedSpace;
+    }
+
     public void createFile(String path, int size){
         if(searchFile(root, path) == null){
             try{
                 VirtualFile newFile = new VirtualFile(size, path);
-                searchDirectory(root, path.substring(0, path.lastIndexOf("/"))).addFile(newFile);
-                spaceManager.allocate(newFile);
+                //If allocation succeeded add the file to parent directory
+                if(spaceManager.allocate(newFile)){
+                    searchDirectory(root, path.substring(0, path.lastIndexOf("/"))).addFile(newFile);
+                }
             }
             catch(Exception e){
                 System.out.println("Path <" + path.substring(0, path.lastIndexOf("/")) + "> doesn't exist");
@@ -79,6 +85,7 @@ public class FileSystem implements Serializable {
 
     public void deleteFile(String path){
         try{
+            //remove from parent
             spaceManager.deallocate(searchFile(root, path));
         }
         catch(Exception e){
@@ -88,6 +95,7 @@ public class FileSystem implements Serializable {
 
     public void deleteFolder(String path){
         try{
+            //remove from parent
             spaceManager.deleteDirectory(searchDirectory(root, path));
         }
         catch(Exception e){

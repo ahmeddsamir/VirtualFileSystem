@@ -9,16 +9,12 @@ public class SpaceManager implements Serializable {
         this.allocator = allocator;
     }
 
-    public void allocate(VirtualFile file){
-        allocator.allocate(file);
+    public boolean allocate(VirtualFile file){
+        return allocator.allocate(file);
     }
 
     public void deallocate(VirtualFile file){
-        file.deleteFile();
-        FileSystem.getFileSystem().decrementAllocatedSpace(file.getSize());
-        for (int block : file.getAllocatedBlocks()) {
-            FileSystem.getFileSystem().setFalse(block);
-        }
+        allocator.deallocate(file);
     }
 
     public void deleteDirectory(Directory directory){
