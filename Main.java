@@ -39,6 +39,7 @@ public class Main {
         }
 
         //After making sure our file system is correctly initialized, start taking user commands
+        scanner.nextLine();
         command = scanner.nextLine();
         while(!command.equalsIgnoreCase("exit")){
             CommandsHandler.parseCommand(command);
