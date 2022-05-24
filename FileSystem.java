@@ -76,7 +76,6 @@ public class FileSystem implements Serializable {
         }
     }
 
-    //To Be Deleted
     public void displaySystemBlocks(){
         for(int i = 0; i < diskSize; i++){
             System.out.println(systemBlocks[i]);
@@ -85,23 +84,19 @@ public class FileSystem implements Serializable {
 
     public void deleteFile(String path){
         try{
-            //remove from parent
             spaceManager.deallocate(searchFile(root, path));
         }
         catch(Exception e){
             System.out.println("Path <" + path + "> doesn't exist");
-            //e.printStackTrace();
         }
     }
 
     public void deleteFolder(String path){
         try{
-            //remove from parent
             spaceManager.deleteDirectory(searchDirectory(root, path));
         }
         catch(Exception e){
             System.out.println("Path <" + path + "> doesn't exist");
-            //e.printStackTrace();
         }
     }
 

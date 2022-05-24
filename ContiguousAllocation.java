@@ -41,7 +41,6 @@ public class ContiguousAllocation implements Allocator{
         else{
             FileSystem.getFileSystem().incrementAllocatedSpace(file.getSize());
             for(int i = index; i < file.getSize() + index; i++){
-                //file.addBlock(i);
                 FileSystem.getFileSystem().setTrue(i);
             }
             file.addBlock(index);
