@@ -37,6 +37,14 @@ public class Directory implements Serializable {
         return directoryPath;
     }
 
+    public void removeFile(VirtualFile file){
+        files.remove(file);
+    }
+
+    public void removeSubDirectory(Directory subDirectory){
+        subDirectories.remove(subDirectory);
+    }
+
     public boolean isDeleted() {
         return deleted;
     }
@@ -47,12 +55,26 @@ public class Directory implements Serializable {
         }
         for (VirtualFile file: files) {
             if(!file.isDeleted()){
-                System.out.println(file.getFilePath().substring(file.getFilePath().lastIndexOf("/") + 1));
+                String space = "";
+                String path = file.getFilePath();
+                for (int i = 0; i < path.length(); i++) {
+                    if (path.charAt(i) == '/') {
+                        space += "\t";
+                    }
+                }
+                System.out.println(space + file.getFilePath().substring(file.getFilePath().lastIndexOf("/") + 1));
             }
         }
         for (Directory directory: subDirectories) {
             if(!directory.isDeleted()){
-                System.out.println(directory.getDirectoryPath().substring(directory.getDirectoryPath().lastIndexOf("/") + 1));
+                String space = "";
+                String path = directory.getDirectoryPath();
+                for (int i = 0; i < path.length(); i++) {
+                    if (path.charAt(i) == '/') {
+                        space += "\t";
+                    }
+                }
+                System.out.println(space + directory.getDirectoryPath().substring(directory.getDirectoryPath().lastIndexOf("/") + 1));
                 directory.printDirectoryStructure(++level);
             }
         }

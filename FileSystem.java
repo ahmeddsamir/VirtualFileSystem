@@ -44,7 +44,7 @@ public class FileSystem implements Serializable {
     }
 
     public void createFile(String path, int size){
-        if(searchFile(root, path) == null){
+        if(searchFile(root, path) == null || searchFile(root, path).isDeleted()){
             try{
                 VirtualFile newFile = new VirtualFile(size, path);
                 //If allocation succeeded add the file to parent directory
@@ -62,7 +62,7 @@ public class FileSystem implements Serializable {
     }
 
     public void createDirectory(String path){
-        if(searchDirectory(root, path) == null){
+        if(searchDirectory(root, path) == null || searchDirectory(root, path).isDeleted()){
             Directory newDirectory = new Directory(path);
             try{
                 searchDirectory(root, path.substring(0, path.lastIndexOf("/"))).addSubDirectory(newDirectory);
@@ -90,6 +90,7 @@ public class FileSystem implements Serializable {
         }
         catch(Exception e){
             System.out.println("Path <" + path + "> doesn't exist");
+            //e.printStackTrace();
         }
     }
 
@@ -100,6 +101,7 @@ public class FileSystem implements Serializable {
         }
         catch(Exception e){
             System.out.println("Path <" + path + "> doesn't exist");
+            //e.printStackTrace();
         }
     }
 

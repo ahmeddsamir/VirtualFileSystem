@@ -29,7 +29,7 @@ public class IndexedAllocation implements Allocator{
     @Override
     public void deallocate(VirtualFile file) {
         file.deleteFile();
-        FileSystem.getFileSystem().decrementAllocatedSpace(file.getSize());
+        FileSystem.getFileSystem().decrementAllocatedSpace(file.getSize() + 1);
         for (int block : file.getAllocatedBlocks()) {
             FileSystem.getFileSystem().setFalse(block);
         }
