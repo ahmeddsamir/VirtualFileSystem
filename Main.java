@@ -46,7 +46,7 @@ public class Main {
             command = scanner.nextLine();
         }
 
-        //Before exiting, write the disk structure onto the file
+        //Before exiting, write the disk structure onto the file and logout current user
         FileOutputStream fileOut = new FileOutputStream(diskStructure);
         ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
         objectOut.writeObject(FileSystem.getFileSystem());

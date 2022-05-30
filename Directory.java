@@ -37,6 +37,7 @@ public class Directory implements Serializable {
         return directoryPath;
     }
 
+    /*
     public void removeFile(VirtualFile file){
         files.remove(file);
     }
@@ -44,7 +45,7 @@ public class Directory implements Serializable {
     public void removeSubDirectory(Directory subDirectory){
         subDirectories.remove(subDirectory);
     }
-
+*/
     public boolean isDeleted() {
         return deleted;
     }

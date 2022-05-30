@@ -25,6 +25,29 @@ public class CommandsHandler implements Serializable {
         else if (arguments[0].equals("systemblocks")){
             FileSystem.getFileSystem().displaySystemBlocks();
         }
+        else if (arguments[0].equals("TellUser")){
+        }
+        else if(arguments[0].equals("CUser") && arguments.length == 3){
+            //arguments[1] username
+            //arguments[2] password
+            //admin only
+            //no user with the same name already created
+        }
+        else if(arguments[0].equals("Grant") && arguments.length == 4){
+            //arguments[1] username
+            //arguments[2] path
+            //arguments[3] capability digits
+            //admin only
+            //folders only
+            //path exists
+            //user exists
+        }
+        else if(arguments[0].equals("Login") && arguments.length == 3){
+            //arguments[1] username
+            //arguments[2] password
+            //user exists
+            //password is correct
+        }
         else{
             System.out.println("Unknown Command");
         }

@@ -10,14 +10,17 @@ public class FileSystem implements Serializable {
     private int diskSize;
     private int allocatedSpace;
     private Directory root = new Directory("root");
+    UsersManager usersManager;
+    Authorization authorization;
 
     private FileSystem(){
-
     }
 
     public static FileSystem getFileSystem(){
         if(fileSystem == null){
             fileSystem = new FileSystem();
+            fileSystem.usersManager = new UsersManager();
+            fileSystem.authorization = new Authorization();
         }
         return fileSystem;
     }
@@ -29,6 +32,8 @@ public class FileSystem implements Serializable {
         fileSystem = (FileSystem) objectIn.readObject();
         objectIn.close();
         fileIn.close();
+        fileSystem.usersManager = new UsersManager();
+        fileSystem.authorization = new Authorization();
     }
 
     public Directory getRootDirectory(){
