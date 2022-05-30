@@ -44,6 +44,14 @@ public class FileSystem implements Serializable {
         return spaceManager;
     }
 
+    public UsersManager getUsersManager() {
+        return usersManager;
+    }
+
+    public Authorization getAuthorization() {
+        return authorization;
+    }
+
     public int getFreeSpace(){
         return diskSize - allocatedSpace;
     }

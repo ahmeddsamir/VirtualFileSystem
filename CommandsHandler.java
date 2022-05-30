@@ -26,14 +26,13 @@ public class CommandsHandler implements Serializable {
             FileSystem.getFileSystem().displaySystemBlocks();
         }
         else if (arguments[0].equals("TellUser")){
+            System.out.println("Current User is " + FileSystem.getFileSystem().getUsersManager().getLoggedInUsername());
         }
         else if(arguments[0].equals("CUser") && arguments.length == 3){
-            //arguments[1] username
-            //arguments[2] password
-            //admin only
-            //no user with the same name already created
+            FileSystem.getFileSystem().getUsersManager().register(arguments[1], arguments[2]);
         }
         else if(arguments[0].equals("Grant") && arguments.length == 4){
+            FileSystem.getFileSystem().getAuthorization().grantCapability(arguments[2], arguments[1], Integer.parseInt(arguments[3].substring(0, 1)), Integer.parseInt(arguments[3].substring(1)));
             //arguments[1] username
             //arguments[2] path
             //arguments[3] capability digits
@@ -43,10 +42,7 @@ public class CommandsHandler implements Serializable {
             //user exists
         }
         else if(arguments[0].equals("Login") && arguments.length == 3){
-            //arguments[1] username
-            //arguments[2] password
-            //user exists
-            //password is correct
+            FileSystem.getFileSystem().getUsersManager().login(arguments[1], arguments[2]);
         }
         else{
             System.out.println("Unknown Command");
