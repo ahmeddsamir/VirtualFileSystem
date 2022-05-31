@@ -101,8 +101,10 @@ public class Authorization implements Serializable {
 
     public void removeEntry(String path){
         String toBeRemoved = "";
+        int pathEnd = 0;
         for(String capability : capabilities){
-            if(capability.startsWith(path)){
+            pathEnd = capability.indexOf(",");
+            if(path.equals(capability) || (pathEnd > 0 && capability.substring(0, pathEnd).equals(path))){
                 toBeRemoved = capability;
                 break;
             }

@@ -16,7 +16,9 @@ public class UsersManager implements Serializable{
                 register("admin", "admin");
             }
             else{
-                login("admin", "admin");
+                loggedInUser.setUsername("admin");
+                loggedInUser.setPassword("admin");
+                //login("admin", "admin");
             }
         } catch (IOException e) {
             e.printStackTrace();
