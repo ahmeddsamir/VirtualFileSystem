@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 public class UsersManager implements Serializable{
 
-    private User loggedInUser = new User("admin", "admin");
+    private User loggedInUser = new User("", "");
 
     public UsersManager() {
         File users = new File("users.txt");
@@ -15,10 +15,12 @@ public class UsersManager implements Serializable{
                 loggedInUser.setPassword("admin");
                 register("admin", "admin");
             }
+            else{
+                login("admin", "admin");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        login("admin", "admin");
     }
 
     public String getLoggedInUsername(){
@@ -27,11 +29,11 @@ public class UsersManager implements Serializable{
 
     public boolean userExists(String username){
         File usersFile = new File("users.txt");
-        Scanner scanner = null;
         try {
-            scanner = new Scanner(usersFile);
+            Scanner scanner = new Scanner(usersFile);
             while (scanner.hasNextLine()) {
                 if(scanner.nextLine().contains(username)){
+                    scanner.close();
                     return true;
                 }
             }
@@ -47,16 +49,14 @@ public class UsersManager implements Serializable{
             boolean exists = false;
             File usersFile = new File("users.txt");
             try {
-                //if (!usersFile.createNewFile()) {
-                    Scanner scanner = new Scanner(usersFile);
-                    while (scanner.hasNextLine()) {
-                        if(scanner.nextLine().contains(username)){
-                            exists = true;
-                            break;
-                        }
+                Scanner scanner = new Scanner(usersFile);
+                while (scanner.hasNextLine()) {
+                    if(scanner.nextLine().contains(username)){
+                        exists = true;
+                        break;
                     }
-                    scanner.close();
-                //}
+                }
+                scanner.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -94,6 +94,7 @@ public class UsersManager implements Serializable{
                     break;
                 }
             }
+            scanner.close();
             if(!loggedIn){
                 System.out.println("Incorrect Credentials!");
             }

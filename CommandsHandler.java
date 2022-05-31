@@ -32,7 +32,7 @@ public class CommandsHandler implements Serializable {
             FileSystem.getFileSystem().getUsersManager().register(arguments[1], arguments[2]);
         }
         else if(arguments[0].equals("Grant") && arguments.length == 4){
-            FileSystem.getFileSystem().getAuthorization().grantCapability(arguments[2], arguments[1], Integer.parseInt(arguments[3].substring(0, 1)), Integer.parseInt(arguments[3].substring(1)));
+            FileSystem.getFileSystem().getAuthorization().grantCapability(arguments[2], arguments[1], arguments[3].substring(0, 1), arguments[3].substring(1));
             //arguments[1] username
             //arguments[2] path
             //arguments[3] capability digits

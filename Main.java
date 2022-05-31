@@ -30,6 +30,7 @@ public class Main {
 
         //If disk structure doesn't exist or is empty, create it and initialize disk size
         if (diskStructure.createNewFile() || diskStructure.length() == 0) {
+
             System.out.println("Please insert disk size in kilobytes.");
             diskSize = scanner.nextInt();
             FileSystem.getFileSystem().setSize(diskSize);
@@ -47,6 +48,7 @@ public class Main {
         }
 
         //Before exiting, write the disk structure onto the file and logout current user
+        FileSystem.getFileSystem().getAuthorization().persistCapabilities();
         FileOutputStream fileOut = new FileOutputStream(diskStructure);
         ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
         objectOut.writeObject(FileSystem.getFileSystem());

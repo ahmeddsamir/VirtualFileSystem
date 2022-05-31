@@ -29,6 +29,7 @@ public class SpaceManager implements Serializable {
         while(!directories.isEmpty()){
             directory = directories.poll();
             directory.deleteDirectory();
+            FileSystem.getFileSystem().getAuthorization().removeEntry(directory.getDirectoryPath());
             for (VirtualFile file : directory.getFiles()) {
                 try{
                     deallocate(file);

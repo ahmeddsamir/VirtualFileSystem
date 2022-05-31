@@ -32,8 +32,8 @@ public class FileSystem implements Serializable {
         fileSystem = (FileSystem) objectIn.readObject();
         objectIn.close();
         fileIn.close();
-        fileSystem.usersManager = new UsersManager();
-        fileSystem.authorization = new Authorization();
+        //fileSystem.usersManager = new UsersManager();
+        //fileSystem.authorization = new Authorization();
     }
 
     public Directory getRootDirectory(){
@@ -57,35 +57,47 @@ public class FileSystem implements Serializable {
     }
 
     public void createFile(String path, int size){
-        if(searchFile(root, path) == null || searchFile(root, path).isDeleted()){
-            try{
-                VirtualFile newFile = new VirtualFile(size, path);
-                //If allocation succeeded add the file to parent directory
-                if(spaceManager.allocate(newFile)){
-                    searchDirectory(root, path.substring(0, path.lastIndexOf("/"))).addFile(newFile);
+        //Check if current user is authorized to create a file in this directory
+        if(authorization.isAuthorized(path.substring(0, path.lastIndexOf("/")), 0)){
+            if(searchFile(root, path) == null || searchFile(root, path).isDeleted()){
+                try{
+                    VirtualFile newFile = new VirtualFile(size, path);
+                    //If allocation succeeded add the file to parent directory
+                    if(spaceManager.allocate(newFile)){
+                        searchDirectory(root, path.substring(0, path.lastIndexOf("/"))).addFile(newFile);
+                    }
+                }
+                catch(Exception e){
+                    System.out.println("Path <" + path.substring(0, path.lastIndexOf("/")) + "> doesn't exist");
                 }
             }
-            catch(Exception e){
-                System.out.println("Path <" + path.substring(0, path.lastIndexOf("/")) + "> doesn't exist");
+            else{
+                System.out.println("File already exists");
             }
         }
         else{
-            System.out.println("File already exists");
+            System.out.println("You are not authorized to do this action!");
         }
     }
 
     public void createDirectory(String path){
-        if(searchDirectory(root, path) == null || searchDirectory(root, path).isDeleted()){
-            Directory newDirectory = new Directory(path);
-            try{
-                searchDirectory(root, path.substring(0, path.lastIndexOf("/"))).addSubDirectory(newDirectory);
+        if(authorization.isAuthorized(path.substring(0, path.lastIndexOf("/")), 0)){
+            if(searchDirectory(root, path) == null || searchDirectory(root, path).isDeleted()){
+                Directory newDirectory = new Directory(path);
+                try{
+                    searchDirectory(root, path.substring(0, path.lastIndexOf("/"))).addSubDirectory(newDirectory);
+                    FileSystem.getFileSystem().getAuthorization().addEntry(path);
+                }
+                catch(Exception e){
+                    System.out.println("Path <" + path.substring(0, path.lastIndexOf("/")) + "> doesn't exist");
+                }
             }
-            catch(Exception e){
-                System.out.println("Path <" + path.substring(0, path.lastIndexOf("/")) + "> doesn't exist");
+            else{
+                System.out.println("Folder already exists");
             }
         }
         else{
-            System.out.println("Folder already exists");
+            System.out.println("You are not authorized to do this action!");
         }
     }
 
@@ -96,20 +108,30 @@ public class FileSystem implements Serializable {
     }
 
     public void deleteFile(String path){
-        try{
-            spaceManager.deallocate(searchFile(root, path));
+        if(authorization.isAuthorized(path.substring(0, path.lastIndexOf("/")), 1)){
+            try{
+                spaceManager.deallocate(searchFile(root, path));
+            }
+            catch(Exception e){
+                System.out.println("Path <" + path + "> doesn't exist");
+            }
         }
-        catch(Exception e){
-            System.out.println("Path <" + path + "> doesn't exist");
+        else{
+            System.out.println("You are not authorized to do this action!");
         }
     }
 
     public void deleteFolder(String path){
-        try{
-            spaceManager.deleteDirectory(searchDirectory(root, path));
+        if(authorization.isAuthorized(path.substring(0, path.lastIndexOf("/")), 1)){
+            try{
+                spaceManager.deleteDirectory(searchDirectory(root, path));
+            }
+            catch(Exception e){
+                System.out.println("Path <" + path + "> doesn't exist");
+            }
         }
-        catch(Exception e){
-            System.out.println("Path <" + path + "> doesn't exist");
+        else{
+            System.out.println("You are not authorized to do this action!");
         }
     }
 
