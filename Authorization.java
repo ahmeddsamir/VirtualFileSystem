@@ -31,12 +31,14 @@ public class Authorization implements Serializable {
     public void grantCapability(String path, String username, String create, String delete){
         String toBeAdded = "";
         String targetEntry = "";
+        int pathEnd = 0;
         //Check if the admin is logged on
         if(FileSystem.getFileSystem().getUsersManager().getLoggedInUsername().equals("admin")){
             //Check if the path exists
             if(FileSystem.getFileSystem().searchDirectory(FileSystem.getFileSystem().getRootDirectory(), path) != null){
                 for(String capability : capabilities){
-                    if(capability.startsWith(path)){
+                    pathEnd = capability.indexOf(",");
+                    if(capability.equals(path) || (pathEnd > 0 && capability.substring(0, pathEnd).equals(path))){
                         targetEntry = capability;
                         toBeAdded = capability + "," + username + "," + create + delete;
                         break;
@@ -56,18 +58,27 @@ public class Authorization implements Serializable {
 
     public boolean isAuthorized(String path, int action){
         int pathEnd = 0;
-        for(String capability : capabilities){
-            pathEnd = capability.indexOf(",");
-            if(pathEnd > 0 && capability.substring(0, pathEnd).equals(path)){
-                if(action == 0){
-                    return createAuthorization(capability);
-                }
-                else{
-                    return deleteAuthorization(capability);
+        boolean authorized = false;
+        while(true){
+            for(String capability : capabilities){
+                pathEnd = capability.indexOf(",");
+                if(pathEnd > 0 && capability.substring(0, pathEnd).equals(path)){
+                    if(action == 0){
+                        authorized = createAuthorization(capability);
+                    }
+                    else{
+                        authorized = deleteAuthorization(capability);
+                    }
                 }
             }
+            if(authorized){
+                return true;
+            }
+            if(path.equals("root")){
+                return false;
+            }
+            path = path.substring(0, path.lastIndexOf("/"));
         }
-        return false;
     }
 
     public boolean createAuthorization(String entry){
