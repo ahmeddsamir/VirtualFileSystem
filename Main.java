@@ -48,6 +48,8 @@ public class Main {
         }
 
         //Before exiting, write the disk structure onto the file and logout current user
+        FileSystem.getFileSystem().getUsersManager().getLoggedInUser().setUsername("admin");
+        FileSystem.getFileSystem().getUsersManager().getLoggedInUser().setPassword("admin");
         FileSystem.getFileSystem().getAuthorization().persistCapabilities();
         FileOutputStream fileOut = new FileOutputStream(diskStructure);
         ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);

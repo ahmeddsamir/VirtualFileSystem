@@ -19,10 +19,15 @@ public class UsersManager implements Serializable{
                 loggedInUser.setUsername("admin");
                 loggedInUser.setPassword("admin");
                 //login("admin", "admin");
+                //login("admin", "admin");
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public User getLoggedInUser() {
+        return loggedInUser;
     }
 
     public String getLoggedInUsername(){
